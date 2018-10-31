@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:context="cn.arirus.mddemo.scrolling.Main5Activity"
+    >
+  
+  <!--<android.support.v4.widget.SwipeRefreshLayout-->
+      <!--android:id="@+id/refresher"-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="wrap_content"-->
+      <!--&gt;-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recycler"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--/>-->
+
+  <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+
+
+  <cn.arirus.mddemo.scrolling.ParentViewNested
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+    <cn.arirus.mddemo.scrolling.ChildViewNested
+        android:id="@+id/child1"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="111111111"
+        android:textSize="22sp"
+        android:gravity="center"/>
+    <cn.arirus.mddemo.scrolling.ChildViewNested
+        android:id="@+id/child2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:text="22222222"
+        android:textSize="22sp"
+        android:gravity="center"/>
+    <cn.arirus.mddemo.scrolling.ChildViewNested
+        android:id="@+id/child3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="3333333"
+        android:textSize="22sp"
+        android:gravity="center"/>
+  </cn.arirus.mddemo.scrolling.ParentViewNested>
+
+
+</android.support.design.widget.CoordinatorLayout>

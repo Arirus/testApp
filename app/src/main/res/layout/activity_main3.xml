@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.arirus.mddemo.Main3Activity"
+    android:id="@+id/main_view"
+    >
+
+  <cn.arirus.mddemo.Widget
+      android:id="@+id/w"
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      android:background="@color/colorPrimary"
+      />
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@android:color/black"
+      android:layout_gravity="center"
+      />
+
+  <ImageView
+      android:layout_width="1dp"
+      android:layout_height="match_parent"
+      android:background="@android:color/black"
+      android:layout_gravity="center"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      />
+
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/btn1"
+      android:text="scrollX"
+      android:layout_gravity="bottom|left"
+      />
+
+  <Button
+      android:layout_gravity="bottom|right"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="scrolly"
+      android:visibility="invisible"
+
+      android:id="@+id/btn2"
+      />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">DemoApp</string>
+  <string name="toolbarbehavior">cn.arirus.mddemo.ToolbarRecyclerBehavior</string>
+
+  <string name="parentBehavior">cn.arirus.mddemo.scrolling.BehaviorParent</string>
+  <string name="childBehavior">cn.arirus.mddemo.scrolling.BehaviorChild</string>
+</resources>

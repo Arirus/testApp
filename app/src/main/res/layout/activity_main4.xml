@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.arirus.mddemo.dispatch.Main4Activity"
+    >
+  <cn.arirus.mddemo.dispatch.ViewParent1
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@android:color/black"
+      >
+    <!--<cn.arirus.mddemo.dispatch.ViewParent1-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@android:color/black"-->
+    <!--&gt;-->
+    <cn.arirus.mddemo.dispatch.ChildView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_red_dark"
+        android:translationZ="50dp"
+        />
+
+
+    <!--</cn.arirus.mddemo.dispatch.ViewParent1>-->
+  </cn.arirus.mddemo.dispatch.ViewParent1>
+
+
+</android.support.constraint.ConstraintLayout>

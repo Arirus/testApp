@@ -1,8 +1,9 @@
 package cn.arirus.mddemo.material;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,8 +15,11 @@ import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import cn.arirus.mddemo.R;
 import cn.arirus.mddemo.draw.Utils;
+
+import static cn.arirus.mddemo.MainActivity.ARIRUS;
 
 public class MaterialEditText extends AppCompatEditText {
 
@@ -29,14 +33,29 @@ public class MaterialEditText extends AppCompatEditText {
   Rect hintRect = new Rect();
   float hintSize = Utils.sp2px(14);
   static int HINT_COLOR;
+
+  float hintLine;
   float hintTop;
-  float hintTopMin;
-  float hintTopMax;
-  float[] hintTops;
+  float hintBottom;
+  float hintEdgeMin;
+  float hintEdgeMax;
+
+  Path mPath = new Path();
+  float pathLength;
+  float[] mpos;
+
+  PathMeasure mPathMeasure = new PathMeasure();
 
   float hintLeft;
 
-  ObjectAnimator mObjectAnimator;
+  ObjectAnimator mObjectAnimatorTop;
+  ObjectAnimator mObjectAnimatorBottom;
+
+  ObjectAnimator mObjectAnimatorTextSieze;
+  ObjectAnimator mObjectAnimatorAlpha;
+
+  AnimatorSet mSet;
+  AnimatorSet mSetReverse;
 
   @ShownST
   int showing = ShownST.ToHide;
@@ -45,25 +64,39 @@ public class MaterialEditText extends AppCompatEditText {
     HINT_COLOR = ContextCompat.getColor(context, R.color.colorPrimary);
     mPaint.setTextSize(hintSize);
     mPaint.setColor(HINT_COLOR);
+    mPaint.setStyle(Paint.Style.STROKE);
     mPaint.getTextBounds(getHint().toString(), 0, getHint().length(), hintRect);
-    hintLeft = -hintRect.left + getTotalPaddingLeft() + Utils.dp2px(2);
+    pathLength = hintRect.right - hintRect.left;
+    hintLeft = -hintRect.left + getTotalPaddingLeft();
     hintTop = mPaint.getFontMetrics(null);
-    hintTops = new float[getHint().length()];
-    hintTopMin = hintTop;
+    hintBottom = mPaint.getFontMetrics(null);
+    mpos = new float[getHint().length() * 2];
+    hintEdgeMin = hintTop;
     mPaint.setTextSize(getTextSize());
-    hintTopMax = hintTop+mPaint.getFontMetrics(null) + Utils.dp2px(4);
+    hintEdgeMax = hintTop + mPaint.getFontMetrics(null) + Utils.dp2px(4);
     setPadding(getTotalPaddingLeft(), getTotalPaddingTop() + (int) hintTop, getTotalPaddingRight(),
         getTotalPaddingBottom());
 
-    PropertyValuesHolder valuesHolderTransY = PropertyValuesHolder.ofFloat("HintTop",
-        hintTopMax);
-    PropertyValuesHolder valuesHolderAlpha = PropertyValuesHolder.ofInt("HintAlpha", 0);
-    PropertyValuesHolder valuesHolderSize =
-        PropertyValuesHolder.ofFloat("HintSize", Utils.dp2px(14), getTextSize());
-    mObjectAnimator =
-        ObjectAnimator.ofPropertyValuesHolder(this, valuesHolderTransY, valuesHolderAlpha,
-            valuesHolderSize);
-    mObjectAnimator.setDuration(200);
+    mSet = new AnimatorSet();
+    mSetReverse = new AnimatorSet();
+
+    PropertyValuesHolder valuesHolderTransTop =
+        PropertyValuesHolder.ofFloat("HintTop", hintEdgeMin, hintEdgeMax);
+    PropertyValuesHolder valuesHolderTransBottom =
+        PropertyValuesHolder.ofFloat("HintBottom", hintEdgeMin, hintEdgeMax);
+
+    mObjectAnimatorTop = ObjectAnimator.ofPropertyValuesHolder(this, valuesHolderTransTop);
+
+    mObjectAnimatorBottom = ObjectAnimator.ofPropertyValuesHolder(this, valuesHolderTransBottom);
+
+    mObjectAnimatorTop.setDuration(100);
+    mObjectAnimatorBottom.setDuration(100);
+
+    mObjectAnimatorTextSieze = ObjectAnimator.ofFloat(this, "HintSize", getTextSize());
+    mObjectAnimatorAlpha = ObjectAnimator.ofInt(this, "HintAlpha", 0);
+    mObjectAnimatorTextSieze.setDuration(200);
+    mObjectAnimatorAlpha.setDuration(200);
+
     onShowChange(ShownST.ToHide);
   }
 
@@ -98,30 +131,66 @@ public class MaterialEditText extends AppCompatEditText {
     });
   }
 
+  @TargetApi(26)
   private void onShowChange(@ShownST int showing) {
     this.showing = showing;
     if (ShownST.ToHide == showing) {
-      mObjectAnimator.start();
+      mSet.cancel();
+      mSetReverse.playSequentially(mObjectAnimatorTop, mObjectAnimatorBottom);
+      mObjectAnimatorTextSieze.start();
+      mSetReverse.start();
+      mObjectAnimatorAlpha.start();
     } else if (ShownST.ToShown == showing) {
-      mObjectAnimator.reverse();
+      mSetReverse.cancel();
+      mSet.playSequentially(mObjectAnimatorBottom, mObjectAnimatorTop);
+      mSet.reverse();
+      mObjectAnimatorTextSieze.reverse();
+      mObjectAnimatorAlpha.reverse();
     }
+  }
+
+  public float getHintBottom() {
+    return hintBottom;
+  }
+
+  @TargetApi(21)
+  public void setHintBottom(float hintBottom) {
+    Log.i(ARIRUS, "setHintTop: " + hintTop + " " + hintBottom);
+
+    this.hintBottom = hintBottom;
+    mPath.reset();
+    if (hintTop <= hintBottom) {
+      mPath.addArc(hintLeft - pathLength-Utils.dp2px(2), hintTop, hintLeft + pathLength+Utils.dp2px(2),
+          hintBottom + Utils.dp2px(1) + (hintBottom - hintTop), 270, 90);
+    } else {
+      mPath.addArc(hintLeft ,  hintBottom,
+          hintLeft + 2*pathLength+2*Utils.dp2px(2), hintTop*2 + Utils.dp2px(1)-hintBottom, -180, 90);
+    }
+
+    invalidate();
   }
 
   public float getHintTop() {
     return hintTop;
   }
 
+  @TargetApi(21)
   public void setHintTop(float hintTop) {
+    Log.i(ARIRUS, "setHintTop: " + hintTop + " " + hintBottom);
     this.hintTop = hintTop;
+    mPath.reset();
+
+    if (hintTop <= hintBottom) {
+      mPath.addArc(hintLeft - pathLength-Utils.dp2px(2), hintTop, hintLeft + pathLength+Utils.dp2px(2),
+          hintBottom + Utils.dp2px(1) + (hintBottom - hintTop), 270, 90);
+    } else {
+      mPath.addArc(hintLeft ,  hintBottom,
+          hintLeft + 2*pathLength+2*Utils.dp2px(2), hintTop*2 + Utils.dp2px(1)-hintBottom, -180, 90);
+    }
+
+    //mPath.addArc(hintLeft - pathLength, hintTop, hintLeft + pathLength, hintBottom+Utils.dp2px(1), 270, 90);
+
     invalidate();
-  }
-
-  public float getHintLeft() {
-    return hintLeft;
-  }
-
-  public void setHintLeft(float hintLeft) {
-    this.hintLeft = hintLeft;
   }
 
   public int getHintAlpha() {
@@ -139,18 +208,56 @@ public class MaterialEditText extends AppCompatEditText {
 
   public void setHintSize(float hintSize) {
     this.hintSize = hintSize;
+    mPaint.setTextSize(hintSize);
+    mPaint.getTextBounds(getHint().toString(), 0, getHint().length(), hintRect);
+    pathLength = hintRect.right - hintRect.left + Utils.dp2px(1);
+    hintLeft = -hintRect.left + getTotalPaddingLeft();
     invalidate();
   }
 
+  public float getHintLine() {
+    return hintLine;
+  }
+
+  public void setHintLine(float hintLine) {
+    this.hintLine = hintLine;
+  }
+
   @Override
+  @TargetApi(21)
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
-    mPaint.setTextSize(hintSize);
     //for (int i = 0; i < getHint().length(); i++) {
     //  mPaint.getTextBounds(getHint().toString(),0,i,hintRect);
-      canvas.drawText(getHint(), 0, getHint().length(), hintLeft, hintTop, mPaint);
+    //  canvas.drawText(getHint(), i, i+1, hintLeft+hintRect.right, hintTop, mPaint);
     //}
 
+    ////canvas.drawRect(hintLeft - pathLength, hintTop, hintLeft + pathLength, hintTop+Utils.dp2px(1), mPaint);
+    //Log.i(ARIRUS, "onDraw: "
+    //    + (hintLeft - pathLength)
+    //    + " "
+    //    + hintTop
+    //    + " "
+    //    + ( hintLeft + pathLength)
+    //    + "  "
+    //    + ( hintBottom));
 
+    //mPath.reset();
+    //mPath.addArc(hintLeft - pathLength, hintTop, hintLeft + pathLength, hintTop+2, 270, 90);
+
+    mPathMeasure.setPath(mPath, false);
+    //Log.i(ARIRUS, "onDraw: " + hintLeft + " " + hintTop);
+    //canvas.drawPath(mPath, mPaint);
+    for (int i = 0; i < getHint().length(); i++) {
+      mPaint.getTextBounds(getHint().toString(), 0, i, hintRect);
+      Log.i(ARIRUS, "onDraw: " + hintRect.left);
+      Log.i(ARIRUS, "onDraw: " + mPathMeasure.getPosTan(
+          mPathMeasure.getLength() * (hintLeft + hintRect.right) / pathLength, mpos, null));
+      //  Log.i(ARIRUS, "onDraw: "+mpos[0]+" "+mpos[1]);
+        canvas.drawText(getHint(), i, i+1, mpos[0], mpos[1], mPaint);
+    }
+    //Log.i(ARIRUS, "onDraw: " + mpos[0] + " " + mpos[1]);
+    //canvas.drawText(getHint(), 0, getHint().length(), hintLeft+hintRect.right, hintTop, mPaint);
+    //canvas.drawTextOnPath(getHint().toString(), mPath, 0, 0, mPaint);
   }
 }

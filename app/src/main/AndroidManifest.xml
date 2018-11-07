@@ -104,13 +104,22 @@
       <!-- </intent-filter> -->
     </activity>
     <activity android:name=".anim.FilpboardActivity">
+
+      <!-- <intent-filter> -->
+      <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+      <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+      <!-- </intent-filter> -->
+    </activity>
+    <activity android:name=".material.MaterialEditTextActivity">
       <!--<intent-filter>-->
         <!--<action android:name="android.intent.action.MAIN"/>-->
 
         <!--<category android:name="android.intent.category.LAUNCHER"/>-->
       <!--</intent-filter>-->
     </activity>
-    <activity android:name=".material.MaterialEditTextActivity">
+    <activity android:name=".layout.LayoutActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 

@@ -15,8 +15,6 @@ public class MaterialEditTextActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_material_edit_text);
-
-    startActivity(new Intent(this,Main2Activity.class));
   }
 
 }

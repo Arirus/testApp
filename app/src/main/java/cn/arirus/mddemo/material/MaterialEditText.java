@@ -1,5 +1,6 @@
 package cn.arirus.mddemo.material;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -131,19 +132,40 @@ public class MaterialEditText extends AppCompatEditText {
     });
   }
 
-  @TargetApi(26)
+  //@TargetApi(26)
   private void onShowChange(@ShownST int showing) {
     this.showing = showing;
     if (ShownST.ToHide == showing) {
       mSet.cancel();
+      mObjectAnimatorTop.removeAllListeners();
       mSetReverse.playSequentially(mObjectAnimatorTop, mObjectAnimatorBottom);
       mObjectAnimatorTextSieze.start();
       mSetReverse.start();
       mObjectAnimatorAlpha.start();
     } else if (ShownST.ToShown == showing) {
       mSetReverse.cancel();
-      mSet.playSequentially(mObjectAnimatorBottom, mObjectAnimatorTop);
-      mSet.reverse();
+      //26一下这么写
+      mObjectAnimatorTop.addListener(new Animator.AnimatorListener() {
+        @Override public void onAnimationStart(Animator animation) {
+        }
+
+        @Override public void onAnimationEnd(Animator animation) {
+          mObjectAnimatorBottom.reverse();
+
+        }
+
+        @Override public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override public void onAnimationRepeat(Animator animation) {
+
+        }
+      });
+      mObjectAnimatorTop.reverse();
+      //26以上这么写
+      //mSet.playSequentially(mObjectAnimatorBottom, mObjectAnimatorTop);
+      //mSet.reverse();
       mObjectAnimatorTextSieze.reverse();
       mObjectAnimatorAlpha.reverse();
     }

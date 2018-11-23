@@ -4,6 +4,7 @@
     package="cn.arirus.mddemo">
 
   <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
 
   <application
       android:allowBackup="true"
@@ -33,12 +34,12 @@
     </activity>
     <activity android:name=".Main3Activity">
 
-       <!--<intent-filter>-->
-       <!--<action android:name="android.intent.action.MAIN"/>-->
+      <!-- <intent-filter> -->
+      <!-- <action android:name="android.intent.action.MAIN"/> -->
 
 
-       <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-       <!--</intent-filter>-->
+      <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+      <!-- </intent-filter> -->
     </activity>
     <activity android:name=".dispatch.Main4Activity">
 
@@ -122,19 +123,37 @@
       <!-- </intent-filter> -->
     </activity>
     <activity android:name=".layout.LayoutActivity">
-      <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.MAIN"/>-->
 
-        <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-      <!--</intent-filter>-->
+      <!-- <intent-filter> -->
+      <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+      <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+      <!-- </intent-filter> -->
     </activity>
     <activity android:name=".scaleableimage.ScaleableActivity">
+
+      <!-- <intent-filter> -->
+      <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+      <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+      <!-- </intent-filter> -->
+    </activity>
+    <activity android:name=".ipc.IpcActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
+    <service
+        android:name=".ipc.RemoteService"
+        android:process=":remote"
+        android:enabled="true"
+        android:exported="true">
+    </service>
   </application>
 
 </manifest>

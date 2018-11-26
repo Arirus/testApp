@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public class CustomBinder extends Binder implements IContract{
-
+  private static final java.lang.String DESCRIPTOR = "cn.arirus.versioncomp.ipc.CallBack";
 
   public static IContract getContract(IBinder binder) throws RemoteException{
     if (binder == null)
@@ -23,18 +23,22 @@ public class CustomBinder extends Binder implements IContract{
   private RemoteService mService;
 
   public CustomBinder(RemoteService service) {
+    attachInterface(this,DESCRIPTOR);
     mService = service;
   }
 
   @Override
   protected boolean onTransact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags)
       throws RemoteException {
-    this.request();
+    //RequestParm requestParm = data.readParcelable(RequestParm.class.getClassLoader());
+    RequestParm requestParm = data.readParcelable(RequestParm.class.getClassLoader());
+    ICallBack callBack = ResponseCallBack.getCallBack(data.readStrongBinder());
+    this.request(requestParm,callBack);
     return true;
   }
 
-  @Override public void request() {
-    mService.request();
+  @Override public void request(RequestParm requestParm, ICallBack callBack) {
+    mService.request(requestParm, callBack);
   }
 
   @Override public IBinder asBinder() {
@@ -50,9 +54,16 @@ public class CustomBinder extends Binder implements IContract{
       mIBinder = iBinder;
     }
 
-    @Override public void request() {
+    public java.lang.String getInterfaceDescriptor() {
+      return DESCRIPTOR;
+    }
+
+    @Override public void request(RequestParm requestParm, ICallBack callBack) {
       try {
-        mIBinder.transact(FIRST_CALL_TRANSACTION,Parcel.obtain(),Parcel.obtain(),0);
+        Parcel request = Parcel.obtain();
+        request.writeParcelable(requestParm,0);
+        request.writeStrongBinder(callBack.asBinder());
+        mIBinder.transact(FIRST_CALL_TRANSACTION,request,Parcel.obtain(),0);
       } catch (RemoteException e) {
         e.printStackTrace();
       }

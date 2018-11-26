@@ -4,5 +4,5 @@ import android.os.IInterface;
 
 public interface IContract extends IInterface {
 
-  void request();
+  void request(RequestParm requestParm , ICallBack callBack);
 }

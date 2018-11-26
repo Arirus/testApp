@@ -150,10 +150,19 @@
 
     <service
         android:name=".ipc.RemoteService"
-        android:process=":remote"
         android:enabled="true"
-        android:exported="true">
+        android:exported="true"
+        android:process=":remote"
+        >
     </service>
+
+    <activity android:name=".decomp.DecompActivity">
+      <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN"/>-->
+
+        <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+      <!--</intent-filter>-->
+    </activity>
   </application>
 
 </manifest>

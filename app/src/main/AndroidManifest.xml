@@ -141,27 +141,35 @@
       <!-- </intent-filter> -->
     </activity>
     <activity android:name=".ipc.IpcActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+      <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN"/>-->
 
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
+        <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+      <!--</intent-filter>-->
     </activity>
 
     <service
         android:name=".ipc.RemoteService"
         android:enabled="true"
         android:exported="true"
-        android:process=":remote"
-        >
+        android:process=":remote">
     </service>
 
     <activity android:name=".decomp.DecompActivity">
-      <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.MAIN"/>-->
 
-        <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-      <!--</intent-filter>-->
+      <!-- <intent-filter> -->
+      <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+      <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+      <!-- </intent-filter> -->
+    </activity>
+    <activity android:name=".rxjava.RxjavaActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
     </activity>
   </application>
 
